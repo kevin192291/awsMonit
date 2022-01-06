@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "awsmonit-7d7d4": {
+      "hosting": {
+        "fbTest": [
+          "awsmonit-7d7d4"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "awsmonit-7d7d4"
+  }
+}
