@@ -1,5 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+
+import {
+  getAuth,
+  setPersistence,
+  browserLocalPersistence,
+  browserSessionPersistence,
+  inMemoryPersistence
+} from "firebase/auth";
+
 import {
   Auth,
   signOut,
@@ -36,22 +45,27 @@ export class LoginComponent implements OnInit {
   constructor(private auth: Auth, private router: Router) { }
 
   ngOnInit(): void {
-    
+
   }
 
   async submit() {
-    console.log('submit');
     if (this.emailFormControl.valid && this.passwordFormControl.valid) {
       const result: UserCredential = await this.emailLogin(this.emailFormControl.value, this.passwordFormControl.value);
       console.log(result);
-      if (result.user && result.user.uid) {
+      if (result && result.user && result.user.uid) {
         this.router.navigate(['/status/status-list']);
+      } else {
+        console.log("login failed");
       }
     }
   }
 
   private async emailLogin(email: string, password: string): Promise<any> {
-    return await signInWithEmailAndPassword(this.auth, email, password);
+    const auth = getAuth();
+    return await setPersistence(auth, browserLocalPersistence).then(async () => {
+      return await signInWithEmailAndPassword(this.auth, email, password);
+    });
+
   }
 
 }

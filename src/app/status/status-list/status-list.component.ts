@@ -48,6 +48,8 @@ export class StatusListComponent implements OnInit, AfterViewInit {
   firstId: string = '';
   pageEvent!: PageEvent;
   currentPage: number = 0;
+  totalItems: number = 0;
+  pageSize: number = 5;
   ngOnInit(): void { }
 
   displayedColumns: string[] = ['id', 'name', 'publicIp', 'privateIp', 'state', 'type'];
@@ -66,7 +68,7 @@ export class StatusListComponent implements OnInit, AfterViewInit {
       query<any>(
         collection(this.afs, 'servers') as CollectionReference<any>,
         orderBy('id'),
-        limit(5),
+        limit(this.pageSize),
       ),
     ).pipe(take(1)).toPromise().then(data => {
       if (data.length > 0) {
@@ -74,6 +76,7 @@ export class StatusListComponent implements OnInit, AfterViewInit {
         this.lastId = data[data.length - 1].id;
         this.firstId = data[0].id;
         this.dataSource.sort = this.sort;
+        this.pageSize = this.paginator.pageSize;
       } else {
         // add no data found message here or something
       }
@@ -90,14 +93,14 @@ export class StatusListComponent implements OnInit, AfterViewInit {
   }
 
   async onPage($event: any) {
-    console.log(this.pageEvent);
-    if (this.currentPage < $event.pageIndex) {
+    if ($event && this.currentPage < $event.pageIndex) {
+      this.pageSize = $event.pageSize;
       await collectionData<any>(
         query<any>(
           collection(this.afs, `servers`) as CollectionReference<any>,
           orderBy('id'),
           startAfter(this.lastId),
-          limit(5),
+          limit(this.pageSize),
         ),
       ).pipe(take(1)).toPromise().then(data => {
         if (data.length > 0) {
@@ -115,7 +118,7 @@ export class StatusListComponent implements OnInit, AfterViewInit {
           collection(this.afs, `servers`) as CollectionReference<any>,
           orderBy('id'),
           endBefore(this.firstId),
-          limitToLast(5),
+          limitToLast(this.pageSize),
         ),
       ).pipe(take(1)).toPromise().then(data => {
         if (data.length > 0) {
@@ -128,6 +131,17 @@ export class StatusListComponent implements OnInit, AfterViewInit {
         }
       });
     }
+  }
+
+  private async getDocCount() {
+    await collectionData<any>(
+      query<any>(
+        collection(this.afs, 'servers') as CollectionReference<any>,
+      )
+    ).pipe(take(1)).toPromise().then(c => {
+      console.log(c.length);
+      this.totalItems = c.length
+    });
   }
 
   sortData($event: any) {

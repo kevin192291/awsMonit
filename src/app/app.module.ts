@@ -3,9 +3,9 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
+import { getApp, initializeApp,provideFirebaseApp } from '@angular/fire/app';
 import { environment } from '../environments/environment';
-import { provideAuth,getAuth } from '@angular/fire/auth';
+import { provideAuth,getAuth, initializeAuth, indexedDBLocalPersistence, browserLocalPersistence, browserSessionPersistence } from '@angular/fire/auth';
 import { provideDatabase,getDatabase } from '@angular/fire/database';
 import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 import { provideFunctions,getFunctions } from '@angular/fire/functions';
@@ -23,6 +23,10 @@ import {MatDividerModule} from '@angular/material/divider';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RegisterComponent } from './register/register.component';
 
+
+import { PERSISTENCE } from '@angular/fire/compat/auth';
+import { Auth } from 'firebase/auth';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,7 +38,18 @@ import { RegisterComponent } from './register/register.component';
     BrowserModule,
     AppRoutingModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideAuth(() => getAuth()),
+    provideAuth(() => {
+      const auth: Auth = initializeAuth(getApp(), {
+          persistence: [
+              indexedDBLocalPersistence,
+              browserLocalPersistence,
+              browserSessionPersistence
+          ],
+          popupRedirectResolver: undefined
+      });
+
+      return auth;
+  }),
     provideDatabase(() => getDatabase()),
     provideFirestore(() => getFirestore()),
     provideFunctions(() => getFunctions()),
@@ -51,7 +66,7 @@ import { RegisterComponent } from './register/register.component';
     MatInputModule,
     MatDividerModule,
   ],
-  providers: [],
+  providers: [{ provide: PERSISTENCE, useValue: 'session' },],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
