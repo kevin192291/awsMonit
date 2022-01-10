@@ -1,0 +1,35 @@
+
+<div id="add-remove">
+  
+  <button mat-fab (click)="removePoint()">
+    <mat-icon aria-hidden="false" aria-label="Remove Stamp">remove</mat-icon>
+  </button>
+  
+  <b *ngIf="card">{{card.points}} Points</b>
+
+  <button mat-fab (click)="addPoint()">
+    <mat-icon aria-hidden="false" aria-label="Add Stamp">add</mat-icon>
+  </button>
+
+</div>
+
+<button id="center-bottom" mat-fab (click)="clearPoints()">
+  <mat-icon aria-hidden="false" aria-label="Remove All Stamps">clear</mat-icon>
+</button>
+
+<!-- <input class="qty" type="number" [(ngModel)]="(customerCard | async).points"> -->
+<!-- <mat-card class="point-card" *ngFor="let card of (cards | async)">
+  <mat-card-title>Actions Buttons</mat-card-title>
+  <mat-card-subtitle>End</mat-card-subtitle>
+  <mat-card-content>
+    <mat-grid-list cols="4" rowHeight="1:.4">
+      <mat-grid-tile *ngFor="let stamp of [].constructor(card.points)">⭐</mat-grid-tile>
+    </mat-grid-list>
+  </mat-card-content>
+  <mat-card-actions align="end">
+    <button mat-raised-button>Business Info</button>
+  </mat-card-actions>
+  <mat-card-footer *ngIf="!card.points">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </mat-card-footer>
+</mat-card> -->

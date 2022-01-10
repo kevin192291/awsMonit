@@ -9,6 +9,7 @@ import {MatTableModule} from '@angular/material/table';
 import {MatInputModule} from '@angular/material/input';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSortModule} from '@angular/material/sort';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -16,12 +17,7 @@ import {MatSortModule} from '@angular/material/sort';
   ],
   imports: [
     CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatTableModule,
-    MatInputModule,
-    MatPaginatorModule,
-    MatSortModule,
+    SharedModule,
 
     StatusRoutingModule
   ]

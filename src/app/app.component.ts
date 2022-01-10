@@ -11,13 +11,6 @@ export class AppComponent implements OnInit {
   constructor(private auth: Auth, private router: Router) { }
 
   ngOnInit(): void {
-    this.auth.onAuthStateChanged(user => {
-      if (user) {
-        this.auth.currentUser?.reload().then(() => {
-          console.log(this.auth.currentUser);
-          this.router.navigate(['status/status-list']);
-        });
-      }
-    })
+    
   }
 }

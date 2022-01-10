@@ -25,15 +25,8 @@ import {
   startAfter,
 } from '@angular/fire/firestore';
 import { limit, orderBy, setDoc, startAt } from 'firebase/firestore';
-
-export interface UserData {
-  id: string;
-  name: string;
-  publicIp: string;
-  privateIp: string;
-  state: string;
-  type: string;
-}
+import { StatusData } from 'src/app/shared/interfaces/status.interface';
+import { DataService } from 'src/app/shared/services/data.service';
 
 
 @Component({
@@ -53,14 +46,14 @@ export class StatusListComponent implements OnInit, AfterViewInit {
   ngOnInit(): void { }
 
   displayedColumns: string[] = ['id', 'name', 'publicIp', 'privateIp', 'state', 'type'];
-  dataSource!: MatTableDataSource<UserData>;
+  dataSource!: MatTableDataSource<StatusData>;
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
   @ViewChild(MatSort)
   sort!: MatSort;
 
-  constructor(private afs: Firestore) {
+  constructor(private afs: Firestore, private dataService: DataService) {
   }
 
   async ngAfterViewInit() {
@@ -95,6 +88,7 @@ export class StatusListComponent implements OnInit, AfterViewInit {
   async onPage($event: any) {
     if ($event && this.currentPage < $event.pageIndex) {
       this.pageSize = $event.pageSize;
+      this.dataService.getStatusList(this.firstId, this.lastId, this.pageSize).subscribe()
       await collectionData<any>(
         query<any>(
           collection(this.afs, `servers`) as CollectionReference<any>,

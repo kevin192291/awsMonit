@@ -12,6 +12,11 @@ const routes: Routes = [
     loadChildren: () => import('./status/status.module').then(m => m.StatusModule),
     canActivate: [AuthGuard]
   },
+  {
+    path: 'point-card',
+    loadChildren: () => import('./point-card/point-card.module').then(m => m.PointCardModule),
+    canActivate: [AuthGuard]
+  },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: '**', component: PageNotFoundComponent }
